@@ -18,7 +18,7 @@ describe Oystercard do
 
   it 'can pay for travel' do
     card = Oystercard.new(50)
-    card.deduct(40)
+    card.touch_out(40)
     expect(card.balance).to eq(10)
   end
 
@@ -34,7 +34,12 @@ describe Oystercard do
   end
 
   it 'prevents journey if balance too low' do
-
     expect{ subject.touch_in }.to raise_error "not enough funds"
+  end
+
+  it 'charges a minimum fare' do
+    subject.top_up(10)
+    subject.touch_in
+    expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
   end
 end
