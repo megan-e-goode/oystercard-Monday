@@ -23,6 +23,7 @@ describe Oystercard do
   end
 
   it 'can start a journey' do
+    subject.top_up(4)
     subject.touch_in
     expect(subject.journey).to be true
   end
@@ -30,5 +31,10 @@ describe Oystercard do
   it 'can end a journey' do
     subject.touch_out
     expect(subject.journey).to be false
+  end
+
+  it 'prevents journey if balance too low' do
+
+    expect{ subject.touch_in }.to raise_error "not enough funds"
   end
 end
