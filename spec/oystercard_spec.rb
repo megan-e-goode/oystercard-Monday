@@ -15,4 +15,10 @@ describe Oystercard do
     subject.top_up(90)
     expect{ subject.top_up(10) }.to raise_error "limit is £#{Oystercard::LIMIT}"
   end
+
+  it 'can pay for travel' do
+    card = Oystercard.new(50)
+    card.deduct(40)
+    expect(card.balance).to eq(10)
+  end
 end
