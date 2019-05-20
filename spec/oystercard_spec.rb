@@ -21,4 +21,14 @@ describe Oystercard do
     card.deduct(40)
     expect(card.balance).to eq(10)
   end
+
+  it 'can start a journey' do
+    subject.touch_in
+    expect(subject.journey).to be true
+  end
+
+  it 'can end a journey' do
+    subject.touch_out
+    expect(subject.journey).to be false
+  end
 end
