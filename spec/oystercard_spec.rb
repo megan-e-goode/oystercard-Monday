@@ -18,7 +18,8 @@ describe Oystercard do
 
   it 'can pay for travel' do
     card = Oystercard.new(50)
-    card.touch_out(40)
+    card.touch_in("b")
+    card.touch_out(40, "a")
     expect(card.balance).to eq(10)
   end
 
@@ -29,7 +30,9 @@ describe Oystercard do
   end
 
   it 'can end a journey' do
-    subject.touch_out
+    subject.top_up(20)
+    subject.touch_in("b")
+    subject.touch_out("a")
     expect(subject.in_journey?).to be false
   end
 
@@ -40,7 +43,7 @@ describe Oystercard do
   it 'charges a minimum fare' do
     subject.top_up(10)
     subject.touch_in("Moorgate")
-    expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
+    expect{ subject.touch_out("a") }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
   end
 
   it 'can store the entry_station at tap in' do
@@ -49,11 +52,6 @@ describe Oystercard do
     expect(subject.entry_station).to eq("Moorgate")
   end
 
-  it 'can forget the entry_station at tap out' do
-    subject.top_up(10)
-    subject.touch_in("Moorgate")
-    expect(subject.touch_out).to eq(nil)
-  end
 
   it 'can tell if we are currently in journey' do
     subject.top_up(10)
@@ -61,4 +59,16 @@ describe Oystercard do
     expect(subject.in_journey?).to eq(true)
   end
 
+  it 'can record touch in travel history' do
+    subject.top_up(10)
+    subject.touch_in("Moorgate")
+    expect(subject.history.length).to eq(1)
+  end
+
+  it 'can record full history' do
+    subject.top_up(10)
+    subject.touch_in("Moorgate")
+    subject.touch_out("Canada Water")
+    expect(subject.history).to eq([{tap_in_station: "Moorgate", tap_out_station: "Canada Water"}])
+  end
 end
