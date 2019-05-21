@@ -22,9 +22,9 @@ describe Oystercard do
     expect(card.balance).to eq(10)
   end
 
-  it 'can start a journey' do
+  it 'can start a journey with an entry_station' do
     subject.top_up(4)
-    subject.touch_in
+    subject.touch_in("Moorgate")
     expect(subject.journey).to be true
   end
 
@@ -34,12 +34,19 @@ describe Oystercard do
   end
 
   it 'prevents journey if balance too low' do
-    expect{ subject.touch_in }.to raise_error "not enough funds"
+    expect{ subject.touch_in("Moorgate") }.to raise_error "not enough funds"
   end
 
   it 'charges a minimum fare' do
     subject.top_up(10)
-    subject.touch_in
+    subject.touch_in("Moorgate")
     expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
   end
+
+  it 'can store the entry_station' do
+    subject.top_up(10)
+    subject.touch_in("Moorgate")
+    expect(subject.entry_station.length).to eq(1)
+  end
+
 end
