@@ -25,24 +25,15 @@ describe Oystercard do
     expect{ subject.touch_in("Moorgate") }.to raise_error "not enough funds"
   end
 
-  it 'can record touch in travel history' do
-    setup
-    expect(subject.history.length).to eq(1)
-  end
-
   it 'can record full history of a single journey' do
     setup
     subject.touch_out("Canada Water")
     expect(subject.history).to eq([{tap_in_station: "Moorgate", tap_out_station: "Canada Water"}])
   end
 
-  it 'has an empty list of journeys by default' do
-    expect(subject.history).to eq([])
-  end
-
-  it 'touch in creates new journey' do
+  it 'touch in starts the journey' do
     setup
-    expect(subject.journey).to be_an_instance_of(Journey)
+    expect(subject.journey.in_journey).to be true
   end
 
   it 'touch out ends the journey' do
