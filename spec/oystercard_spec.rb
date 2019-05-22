@@ -65,10 +65,15 @@ describe Oystercard do
     expect(subject.history.length).to eq(1)
   end
 
-  it 'can record full history' do
+  it 'can record full history of a single journey' do
     subject.top_up(10)
     subject.touch_in("Moorgate")
     subject.touch_out("Canada Water")
     expect(subject.history).to eq([{tap_in_station: "Moorgate", tap_out_station: "Canada Water"}])
   end
+
+  it 'has an empty list of journeys by default' do
+    expect(subject.history).to eq([])
+  end
+  
 end
