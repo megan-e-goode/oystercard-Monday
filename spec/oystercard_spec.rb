@@ -1,4 +1,5 @@
 require 'oystercard'
+require 'journey'
 
 describe Oystercard do
 
@@ -23,19 +24,6 @@ describe Oystercard do
     expect(card.balance).to eq(10)
   end
 
-  it 'can start a journey with an entry_station' do
-    subject.top_up(4)
-    subject.touch_in("Moorgate")
-    expect(subject.in_journey?).to be true
-  end
-
-  it 'can end a journey' do
-    subject.top_up(20)
-    subject.touch_in("b")
-    subject.touch_out("a")
-    expect(subject.in_journey?).to be false
-  end
-
   it 'prevents journey if balance too low' do
     expect{ subject.touch_in("Moorgate") }.to raise_error "not enough funds"
   end
@@ -50,13 +38,6 @@ describe Oystercard do
     subject.top_up(10)
     subject.touch_in("Moorgate")
     expect(subject.entry_station).to eq("Moorgate")
-  end
-
-
-  it 'can tell if we are currently in journey' do
-    subject.top_up(10)
-    subject.touch_in("Moorgate")
-    expect(subject.in_journey?).to eq(true)
   end
 
   it 'can record touch in travel history' do
@@ -75,5 +56,11 @@ describe Oystercard do
   it 'has an empty list of journeys by default' do
     expect(subject.history).to eq([])
   end
-  
+
+  it 'touch in creates new journey' do
+    subject.top_up(10)
+    subject.touch_in("Moorgate")
+    expect(subject.journey).to be_an_instance_of(Journey)
+  end
+
 end
