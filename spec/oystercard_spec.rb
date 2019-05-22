@@ -62,10 +62,10 @@ describe Oystercard do
     expect{ subject.fare }.to change{ subject.balance }.by(-Oystercard::PENALTY_FARE)
   end
 
-  # it 'can charge a penalty fare when you do not touch in' do
-  #   subject.top_up(90)
-  #   subject.touch_out("Kings Cross")
-  #   expect{ subject.fare }.to change{ subject.balance }.by(-Oystercard::PENALTY_FARE)
-  # end
+  it 'can charge a penalty fare when you do not touch in' do
+    subject.top_up(90)
+    subject.touch_out("Kings Cross")
+    expect{ subject.fare }.to change{ subject.balance }.by(-Oystercard::PENALTY_FARE)
+  end
 
 end

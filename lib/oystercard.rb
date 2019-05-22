@@ -25,6 +25,7 @@ class Oystercard
   end
 
   def touch_out(station)
+    @history << { tap_in_station: nil, tap_out_station: nil } unless @journey.in_journey
     @history.last[:tap_out_station] = station
     @journey.end
   end
@@ -38,5 +39,4 @@ class Oystercard
   def deduct(amount)
     @balance -= amount
   end
-
 end
