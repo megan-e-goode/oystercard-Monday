@@ -24,10 +24,11 @@ class Oystercard
     @history << { tap_in_station: station, tap_out_station: nil }
   end
 
-  def touch_out(fare=MINIMUM_FARE, station)
+  def touch_out(station, fare=MINIMUM_FARE)
     deduct(fare)
     @entry_station = nil
     @history.last[:tap_out_station] = station
+    @journey.end_journey
   end
 
   # def in_journey?

@@ -2,6 +2,10 @@ require 'oystercard'
 require 'journey'
 
 describe Oystercard do
+  let(:setup) {
+    subject.top_up(10)
+    subject.touch_in("Moorgate")
+  }
 
   it 'has a default balance of 0' do
     expect(subject.balance).to eq(0)
@@ -20,7 +24,7 @@ describe Oystercard do
   it 'can pay for travel' do
     card = Oystercard.new(50)
     card.touch_in("b")
-    card.touch_out(40, "a")
+    card.touch_out("a", 40)
     expect(card.balance).to eq(10)
   end
 
@@ -29,26 +33,22 @@ describe Oystercard do
   end
 
   it 'charges a minimum fare' do
-    subject.top_up(10)
-    subject.touch_in("Moorgate")
+    setup
     expect{ subject.touch_out("a") }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
   end
 
   it 'can store the entry_station at tap in' do
-    subject.top_up(10)
-    subject.touch_in("Moorgate")
+    setup
     expect(subject.entry_station).to eq("Moorgate")
   end
 
   it 'can record touch in travel history' do
-    subject.top_up(10)
-    subject.touch_in("Moorgate")
+    setup
     expect(subject.history.length).to eq(1)
   end
 
   it 'can record full history of a single journey' do
-    subject.top_up(10)
-    subject.touch_in("Moorgate")
+    setup
     subject.touch_out("Canada Water")
     expect(subject.history).to eq([{tap_in_station: "Moorgate", tap_out_station: "Canada Water"}])
   end
@@ -58,9 +58,14 @@ describe Oystercard do
   end
 
   it 'touch in creates new journey' do
-    subject.top_up(10)
-    subject.touch_in("Moorgate")
+    setup
     expect(subject.journey).to be_an_instance_of(Journey)
+  end
+
+  it 'touch out ends the journey' do
+    setup
+    subject.touch_out("Kings Cross")
+    expect(subject.journey.in_journey).to be false
   end
 
 end
