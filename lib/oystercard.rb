@@ -31,7 +31,7 @@ class Oystercard
   end
 
   def fare
-    @history.last[:tap_in_station] == nil || @history.last[:tap_out_station] == nil ? deduct(PENALTY_FARE) : deduct(MINIMUM_FARE)
+    nil? ? deduct(PENALTY_FARE) : deduct(MINIMUM_FARE)
   end
 
   private
@@ -39,4 +39,9 @@ class Oystercard
   def deduct(amount)
     @balance -= amount
   end
+
+  def nil?
+    @history.last[:tap_in_station] == nil || @history.last[:tap_out_station] == nil
+  end
+
 end
