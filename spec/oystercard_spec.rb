@@ -21,25 +21,8 @@ describe Oystercard do
     expect{ subject.top_up(10) }.to raise_error "limit is £#{Oystercard::LIMIT}"
   end
 
-  it 'can pay for travel' do
-    card = Oystercard.new(50)
-    card.touch_in("b")
-    card.touch_out("a", 40)
-    expect(card.balance).to eq(10)
-  end
-
   it 'prevents journey if balance too low' do
     expect{ subject.touch_in("Moorgate") }.to raise_error "not enough funds"
-  end
-
-  it 'charges a minimum fare' do
-    setup
-    expect{ subject.touch_out("a") }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
-  end
-
-  it 'can store the entry_station at tap in' do
-    setup
-    expect(subject.entry_station).to eq("Moorgate")
   end
 
   it 'can record touch in travel history' do
@@ -67,5 +50,22 @@ describe Oystercard do
     subject.touch_out("Kings Cross")
     expect(subject.journey.in_journey).to be false
   end
+
+  it 'can charge a minimum fare' do
+    setup
+    subject.touch_out("Kings Cross")
+    expect{ subject.fare }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
+  end
+
+  it 'can charge a penalty fare when you do not touch out' do
+    setup
+    expect{ subject.fare }.to change{ subject.balance }.by(-Oystercard::PENALTY_FARE)
+  end
+
+  # it 'can charge a penalty fare when you do not touch in' do
+  #   subject.top_up(90)
+  #   subject.touch_out("Kings Cross")
+  #   expect{ subject.fare }.to change{ subject.balance }.by(-Oystercard::PENALTY_FARE)
+  # end
 
 end
