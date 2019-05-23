@@ -39,12 +39,14 @@ describe Oystercard do
   end
 
   it 'can charge a penalty fare when you do not touch out' do
+    allow(journeylog).to receive(:nil?).and_return(true)
     oyster.top_up(10)
     oyster.touch_in("Barbican")
     expect{ oyster.fare }.to change{ oyster.balance }.by(-Oystercard::PENALTY_FARE)
   end
 
   it 'can charge a penalty fare when you do not touch in' do
+    allow(journeylog).to receive(:nil?).and_return(true)
     oyster.top_up(90)
     oyster.touch_out("Kings Cross")
     expect{ oyster.fare }.to change{ oyster.balance }.by(-Oystercard::PENALTY_FARE)

@@ -28,7 +28,6 @@ class Oystercard
 
   def fare
     @journeylog.nil? ? deduct(PENALTY_FARE) : deduct(MINIMUM_FARE)
-    # This is not returning properly! (Maybe :( )
   end
 
   private

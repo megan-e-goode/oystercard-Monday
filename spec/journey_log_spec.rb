@@ -34,7 +34,6 @@ let(:journey) { double(:journey, :begin => true, :end => false) }
     allow(journey).to receive(:in_journey).and_return(true)
     journeylog.start_journey("Kings Cross")
     journeylog.end_journey("Kings Cross")
-
     expect(journeylog.history.length).to eq(1)
   end
 
