@@ -1,4 +1,4 @@
-require './lib/journey.rb'
+require './lib/journey_log.rb'
 
 class Oystercard
   LIMIT = 90
@@ -7,10 +7,9 @@ class Oystercard
   PENALTY_FARE = 6
   attr_reader :balance, :history, :journey
 
-  def initialize(balance=0, journey=Journey.new)
+  def initialize(journeylog=JourneyLog.new, balance=0)
     @balance = balance
-    @history = []
-    @journey = journey
+    @journeylog = journeylog
   end
 
   def top_up(amount)
@@ -20,28 +19,22 @@ class Oystercard
 
   def touch_in(station)
     raise "not enough funds" if @balance < MINIMUM
-    @history << { tap_in_station: station, tap_out_station: nil }
-    @journey.begin
+    @journeylog.start_journey(station)
   end
 
   def touch_out(station)
-    @history << { tap_in_station: nil, tap_out_station: nil } unless @journey.in_journey
-    @history.last[:tap_out_station] = station
-    @journey.end
+    @journeylog.end_journey(station)
   end
 
   def fare
-    nil? ? deduct(PENALTY_FARE) : deduct(MINIMUM_FARE)
+    @journeylog.nil? ? deduct(PENALTY_FARE) : deduct(MINIMUM_FARE)
+    # This is not returning properly! (Maybe :( )
   end
 
   private
 
   def deduct(amount)
     @balance -= amount
-  end
-
-  def nil?
-    @history.last[:tap_in_station] == nil || @history.last[:tap_out_station] == nil
   end
 
 end

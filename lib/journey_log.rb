@@ -16,4 +16,8 @@ class JourneyLog
     @history.last[:exit] = station
     @journey.end
   end
+
+  def nil?
+    @history.last[:entry] == nil || @history.last[:exit] == nil
+  end
 end
