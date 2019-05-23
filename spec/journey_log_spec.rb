@@ -19,4 +19,8 @@ let(:journey) { double(:journey, :begin => true, :end => false) }
     expect(journey).to receive(:end)
     journeylog.end_journey
   end
+
+  it 'initializes an empty history' do
+    expect(journeylog.history).to eq([])
+  end
 end
