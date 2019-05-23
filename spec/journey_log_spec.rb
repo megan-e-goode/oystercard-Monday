@@ -41,7 +41,20 @@ let(:journey) { double(:journey, :begin => true, :end => false) }
     allow(journey).to receive(:in_journey).and_return(true)
     journeylog.start_journey("Kings Cross")
     journeylog.end_journey("Barbican")
-
     expect(journeylog.history).to include({entry: "Kings Cross", exit: "Barbican"})
+  end
+
+  it 'can display a history of journeys' do
+    allow(journey).to receive(:in_journey).and_return(true)
+    journeylog.start_journey("Kings Cross")
+    journeylog.end_journey("Barbican")
+    expect(journeylog.journeys).to eq(journeylog.history)
+  end
+
+  it 'can display the current journey in history' do
+    allow(journey).to receive(:in_journey).and_return(true)
+    journeylog.start_journey("Kings Cross")
+    journeylog.end_journey("Barbican")
+    expect(journeylog.journeys).to include(journeylog.current)
   end
 end
