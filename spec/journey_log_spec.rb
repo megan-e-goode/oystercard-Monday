@@ -12,7 +12,7 @@ let(:journey) { double(:journey, :begin => true, :end => false) }
 
   it 'can tell journey to begin' do
     expect(journey).to receive(:begin)
-    journeylog.start_journey
+    journeylog.start_journey("Kings Cross")
   end
 
   it 'can tell journey to end' do
@@ -22,5 +22,10 @@ let(:journey) { double(:journey, :begin => true, :end => false) }
 
   it 'initializes an empty history' do
     expect(journeylog.history).to eq([])
+  end
+
+  it 'can add entry_station to history' do
+    journeylog.start_journey("Kings Cross")
+    expect(journeylog.history.length).to eq(1)
   end
 end
