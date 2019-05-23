@@ -16,8 +16,9 @@ let(:journey) { double(:journey, :begin => true, :end => false) }
   end
 
   it 'can tell journey to end' do
+    allow(journey).to receive(:in_journey).and_return(false)
     expect(journey).to receive(:end)
-    journeylog.end_journey
+    journeylog.end_journey("Kings Cross")
   end
 
   it 'initializes an empty history' do
@@ -27,5 +28,21 @@ let(:journey) { double(:journey, :begin => true, :end => false) }
   it 'can add entry_station to history' do
     journeylog.start_journey("Kings Cross")
     expect(journeylog.history.length).to eq(1)
+  end
+
+  it 'can add exit_station to history' do
+    allow(journey).to receive(:in_journey).and_return(true)
+    journeylog.start_journey("Kings Cross")
+    journeylog.end_journey("Kings Cross")
+
+    expect(journeylog.history.length).to eq(1)
+  end
+
+  it 'can add the correct stations for a journey' do
+    allow(journey).to receive(:in_journey).and_return(true)
+    journeylog.start_journey("Kings Cross")
+    journeylog.end_journey("Barbican")
+
+    expect(journeylog.history).to include({entry: "Kings Cross", exit: "Barbican"})
   end
 end

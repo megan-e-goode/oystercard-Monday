@@ -8,10 +8,12 @@ class JourneyLog
 
   def start_journey(station)
     @journey.begin
-    @history << { tap_in_station: station, tap_out_station: nil }
+    @history << { entry: station, exit: nil }
   end
 
-  def end_journey
+  def end_journey(station)
+    @history << { entry: nil, exit: nil } unless @journey.in_journey
+    @history.last[:exit] = station
     @journey.end
   end
 end
