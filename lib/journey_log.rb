@@ -16,8 +16,7 @@ class JourneyLog
   def end_journey(station)
     current_journey unless @journey.in_journey
     @current[:exit] = station
-    @history.pop
-    @history << @current
+    @history.last[:exit] = @current[:exit]
     @journey.end
   end
 
@@ -31,7 +30,10 @@ class JourneyLog
 
   private
   def current_journey
-    @current = { entry: nil, exit: nil } unless @journey.in_journey
+    unless @journey.in_journey
+      @current = { entry: nil, exit: nil }
+      @history << @current
+    end
     @current
   end
 
