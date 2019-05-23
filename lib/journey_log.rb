@@ -7,4 +7,8 @@ class JourneyLog
   def start_journey
     @journey.begin
   end
+
+  def end_journey
+    @journey.end
+  end
 end
